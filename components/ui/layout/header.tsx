@@ -54,8 +54,8 @@ export function Header() {
               className={`text-sm font-medium transition-colors ${
                 isScrolled
                   ? "text-foreground dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
-                  : "text-primary-foreground dark:text-white hover:text-primary-foreground/80 dark:hover:text-white/80"
-              } ${pathname === item.href ? "text-gray-800 dark:text-gray-200" : ""}`}
+                  : "text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-white/80"
+              } ${pathname === item.href ? "text-gray-900 dark:text-gray-200" : ""}`}
             >
               {item.label}
             </Link>
