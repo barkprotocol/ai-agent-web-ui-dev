@@ -68,7 +68,7 @@ export class PrivyEmbeddedWallet implements Wallet {
         },
       }
       const { data } = await this.privyClient.walletApi.rpc(request)
-      return Buffer.from(data.signature, "base64")
+      return new Uint8Array(Buffer.from(data.signature, "base64"))
     } catch (error) {
       throw new Error(`Failed to sign message: ${error instanceof Error ? error.message : "Unknown error"}`)
     }

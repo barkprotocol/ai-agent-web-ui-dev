@@ -78,9 +78,9 @@ function addToolMessageToChat({
 
     return {
       ...message,
-      toolInvocations: message.toolInvocations.map((toolInvocation) => {
+      toolInvocations: message.toolInvocations.map((toolInvocation: { toolCallId: any; }) => {
         const toolResult = toolMessage.content.find(
-          (tool) => tool.toolCallId === toolInvocation.toolCallId,
+          (tool: { toolCallId: any; }) => tool.toolCallId === toolInvocation.toolCallId,
         );
 
         if (toolResult) {

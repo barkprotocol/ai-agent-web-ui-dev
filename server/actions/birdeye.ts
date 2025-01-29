@@ -1,4 +1,4 @@
-import type { export BirdeyeTimeframe } from "@/ai/solana/birdeye"
+import type { export export export export export export export export export BirdeyeTimeframe } from "@/ai/solana/birdeye"
 import type { Trader } from "@/types/trader"
 
 export async function getTopTraders({ timeframe }: { timeframe: BirdeyeTimeframe }): Promise<Trader[]> {
