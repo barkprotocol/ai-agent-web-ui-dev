@@ -11,9 +11,6 @@ module.exports = {
       },
     },
     extend: {
-      fontFamily: {
-        oswald: ["var(--font-oswald)", "sans-serif"],
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -33,8 +30,8 @@ module.exports = {
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "hsl(0, 0%, 30%)",
-          foreground: "hsl(0, 0.00%, 89.40%)",
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
@@ -53,6 +50,10 @@ module.exports = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        oswald: ["Oswald", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

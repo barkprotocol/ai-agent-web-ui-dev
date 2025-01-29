@@ -10,7 +10,7 @@ import {
   LedgerWalletAdapter,
 } from "@solana/wallet-adapter-wallets"
 import { clusterApiUrl } from "@solana/web3.js"
-import { useMemo } from "react"
+import { useMemo, type ReactNode, useState, useEffect } from "react"
 
 // Import wallet adapter styles
 import "@solana/wallet-adapter-react-ui/styles.css"
@@ -18,7 +18,7 @@ import "@solana/wallet-adapter-react-ui/styles.css"
 import "@/app/styles/wallet-adapter.css"
 
 interface WalletContextProviderProps {
-  children: React.ReactNode
+  children: ReactNode
   network?: WalletAdapterNetwork
   endpoint?: string
 }
@@ -28,7 +28,12 @@ export function WalletContextProvider({
   network = WalletAdapterNetwork.Mainnet,
   endpoint: customEndpoint,
 }: WalletContextProviderProps) {
-  // Use the provided endpoint or generate one based on the network
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const endpoint = useMemo(() => customEndpoint || clusterApiUrl(network), [network, customEndpoint])
 
   const wallets = useMemo(
@@ -40,6 +45,10 @@ export function WalletContextProvider({
     ],
     [network],
   )
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <ConnectionProvider endpoint={endpoint}>

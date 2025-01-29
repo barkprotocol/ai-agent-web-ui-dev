@@ -1,72 +1,32 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-
-const recentActivity = [
-  {
-    id: "1",
-    type: "Buy",
-    asset: "SOL",
-    amount: "10",
-    price: "$22.50",
-    date: "2023-08-01",
-  },
-  {
-    id: "2",
-    type: "Sell",
-    asset: "BARK",
-    amount: "500",
-    price: "$0.15",
-    date: "2023-08-02",
-  },
-  {
-    id: "3",
-    type: "Buy",
-    asset: "RAY",
-    amount: "100",
-    price: "$0.75",
-    date: "2023-08-03",
-  },
-  {
-    id: "4",
-    type: "Sell",
-    asset: "SOL",
-    amount: "5",
-    price: "$24.00",
-    date: "2023-08-04",
-  },
-  {
-    id: "5",
-    type: "Buy",
-    asset: "BARK",
-    amount: "1000",
-    price: "$0.14",
-    date: "2023-08-05",
-  },
-]
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function RecentActivity() {
+  const activities = [
+    { id: 1, type: "Trade", description: "SOL/USDC - Buy 10 SOL at $20.5", time: "5 minutes ago" },
+    { id: 2, type: "Agent", description: "Agent #3 started a new trading session", time: "10 minutes ago" },
+    { id: 3, type: "System", description: "Market analysis completed", time: "15 minutes ago" },
+    { id: 4, type: "Trade", description: "BARK/USDC - Sell 100 BARK at $0.07", time: "20 minutes ago" },
+  ]
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Type</TableHead>
-          <TableHead>Asset</TableHead>
-          <TableHead>Amount</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead>Date</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {recentActivity.map((activity) => (
-          <TableRow key={activity.id}>
-            <TableCell className="font-medium">{activity.type}</TableCell>
-            <TableCell>{activity.asset}</TableCell>
-            <TableCell>{activity.amount}</TableCell>
-            <TableCell>{activity.price}</TableCell>
-            <TableCell>{activity.date}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <Card>
+      <CardHeader>
+        <CardTitle>Recent Activity</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul className="space-y-4">
+          {activities.map((activity) => (
+            <li key={activity.id} className="flex justify-between items-center">
+              <div>
+                <p className="font-medium">{activity.type}</p>
+                <p className="text-sm text-gray-500">{activity.description}</p>
+              </div>
+              <span className="text-xs text-gray-400">{activity.time}</span>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   )
 }
 

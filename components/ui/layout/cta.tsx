@@ -7,12 +7,13 @@ export function CTA() {
     <section className="relative bg-black py-16 sm:py-24" aria-labelledby="cta-heading">
       <div className="absolute inset-0 opacity-10">
         <Image
-          src="https://ucarecdn.com/7db1c88b-c5fa-43ec-b430-6a1f1817a7dd/servers.jpg"
+          src="https://ucarecdn.com/f6029e68-9768-49db-80a9-64e41e70acff/waveblack.png"
           alt=""
           fill
           sizes="100vw"
-          className="object-cover"
-          quality={100}
+          quality={90}
+          priority
+          className="object-cover object-center"
         />
       </div>
 

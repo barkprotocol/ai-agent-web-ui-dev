@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "The page you're looking for doesn't exist or has been moved.",
 }
 
-export default function FourOhFour() {
+export default function NotFound() {
   return (
     <div
       className={cn(
