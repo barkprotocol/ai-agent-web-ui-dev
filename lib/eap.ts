@@ -1,12 +1,15 @@
 import { PrivyClient } from "@privy-io/server-auth"
-import { Connection, PublicKey, type ParsedTransactionWithMeta } from "@solana/web3.js"
-import { PrivyEmbeddedWallet } from "./privy-embedded-wallet"
+import { Connection, type PublicKey, type ParsedTransactionWithMeta } from "@solana/web3.js"
+import prisma from "@/lib/prisma"
 
 const SOLANA_RPC_URL = process.env.NEXT_PUBLIC_SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com"
-const EAP_PROGRAM_ID = new PublicKey(process.env.NEXT_PUBLIC_EAP_PROGRAM_ID || "")
-const EAP_TOKEN_MINT = new PublicKey(process.env.NEXT_PUBLIC_EAP_TOKEN_MINT || "")
 
-export async function checkEAPTransaction({ txHash, userId }: { txHash: string; userId: string }) {
+export async function checkEAPTransactionLib({
+  txHash,
+  userId,
+  eapProgramId,
+  eapTokenMint,
+}: { txHash: string; userId: string; eapProgramId: PublicKey; eapTokenMint: PublicKey }) {
   try {
     const privyClient = new PrivyClient({
       appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
@@ -30,7 +33,7 @@ export async function checkEAPTransaction({ txHash, userId }: { txHash: string; 
       return { success: false, message: "Transaction not found" }
     }
 
-    const isValidEAPTransaction = validateEAPTransaction(transaction, solanaWalletAddress)
+    const isValidEAPTransaction = validateEAPTransaction(transaction, solanaWalletAddress, eapProgramId, eapTokenMint)
 
     if (isValidEAPTransaction) {
       await grantEAPAccess(userId)
@@ -44,18 +47,21 @@ export async function checkEAPTransaction({ txHash, userId }: { txHash: string; 
   }
 }
 
-function validateEAPTransaction(transaction: ParsedTransactionWithMeta, userWalletAddress: string): boolean {
-  // Check if the transaction involves the EAP program
+function validateEAPTransaction(
+  transaction: ParsedTransactionWithMeta,
+  userWalletAddress: string,
+  eapProgramId: PublicKey,
+  eapTokenMint: PublicKey,
+): boolean {
   const involvedAccounts = transaction.transaction.message.accountKeys.map((key) => key.pubkey.toBase58())
-  if (!involvedAccounts.includes(EAP_PROGRAM_ID.toBase58())) {
+  if (!involvedAccounts.includes(eapProgramId.toBase58())) {
     return false
   }
 
-  // Check if the transaction is a token transfer to the user's wallet
   const instructions = transaction.transaction.message.instructions
   const transferInstruction = instructions.find(
     (ix) =>
-      ix.programId.equals(EAP_PROGRAM_ID) &&
+      ix.programId.equals(eapProgramId) &&
       "parsed" in ix &&
       ix.parsed.type === "transfer" &&
       ix.parsed.info.destination === userWalletAddress,
@@ -65,8 +71,7 @@ function validateEAPTransaction(transaction: ParsedTransactionWithMeta, userWall
     return false
   }
 
-  // Check if the transferred token is the EAP token
-  if ("parsed" in transferInstruction && transferInstruction.parsed.info.mint !== EAP_TOKEN_MINT.toBase58()) {
+  if ("parsed" in transferInstruction && transferInstruction.parsed.info.mint !== eapTokenMint.toBase58()) {
     return false
   }
 
@@ -74,9 +79,28 @@ function validateEAPTransaction(transaction: ParsedTransactionWithMeta, userWall
 }
 
 async function grantEAPAccess(userId: string): Promise<void> {
-  // Implement the logic to grant EAP access to the user
-  // This could involve updating a database record, setting a flag in the user's profile, etc.
-  // For now, we'll just log a message
-  console.log(`Granting EAP access to user ${userId}`)
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { hasEAPAccess: true },
+    })
+    console.log(`EAP access granted to user ${userId}`)
+  } catch (error) {
+    console.error(`Error granting EAP access to user ${userId}:`, error)
+    throw new Error("Failed to grant EAP access")
+  }
+}
+
+export async function checkEAPAccess(userId: string): Promise<boolean> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { hasEAPAccess: true },
+    })
+    return user?.hasEAPAccess || false
+  } catch (error) {
+    console.error(`Error checking EAP access for user ${userId}:`, error)
+    return false
+  }
 }
 

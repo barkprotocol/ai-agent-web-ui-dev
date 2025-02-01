@@ -1,129 +1,78 @@
 "use client"
 
-import { type FC, useState, useEffect, useCallback } from "react"
+import { useState } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
-import { useWalletModal } from "@solana/wallet-adapter-react-ui"
-import { useConnection } from "@solana/wallet-adapter-react"
-import { LAMPORTS_PER_SOL } from "@solana/web3.js"
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui"
 import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { toast } from "sonner"
-import { Loader2, Copy, Check, Wallet } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Loader2 } from "lucide-react"
 
-export const WalletButton: FC = () => {
-  const { publicKey, wallet, disconnect, connecting, connected } = useWallet()
-  const { setVisible } = useWalletModal()
-  const { connection } = useConnection()
-  const [copying, setCopying] = useState(false)
-  const [balance, setBalance] = useState<number | null>(null)
+export function WalletButton() {
+  const { connected, connecting, connect, disconnect } = useWallet()
+  const [isConnecting, setIsConnecting] = useState(false)
+  const [connectionError, setConnectionError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (connected) {
-      toast.success("Wallet connected successfully!")
-      fetchBalance()
-    } else {
-      setBalance(null)
+  const handleConnect = async () => {
+    setIsConnecting(true)
+    setConnectionError(null)
+    try {
+      await connect()
+      toast.success("Wallet connected successfully")
+    } catch (error) {
+      console.error("Wallet connection error:", error)
+      setConnectionError("Failed to connect wallet. You can still use most features of the website.")
+      toast.error("Failed to connect wallet. Please try again.")
+    } finally {
+      setIsConnecting(false)
     }
-  }, [connected])
+  }
 
-  const fetchBalance = useCallback(async () => {
-    if (publicKey) {
-      try {
-        const balance = await connection.getBalance(publicKey)
-        setBalance(balance / LAMPORTS_PER_SOL)
-      } catch (error) {
-        console.error("Failed to fetch balance:", error)
-        toast.error("Failed to fetch wallet balance.")
-      }
+  const handleDisconnect = async () => {
+    try {
+      await disconnect()
+      toast.success("Wallet disconnected successfully")
+    } catch (error) {
+      console.error("Wallet disconnection error:", error)
+      toast.error("Failed to disconnect wallet")
     }
-  }, [publicKey, connection])
+  }
 
-  const handleWalletClick = useCallback(() => {
-    if (!connected) {
-      setVisible(true)
-    }
-  }, [connected, setVisible])
-
-  const handleDisconnect = useCallback(() => {
-    disconnect().catch((error) => {
-      console.error("Failed to disconnect:", error)
-      toast.error("Failed to disconnect. Please try again.")
-    })
-  }, [disconnect])
-
-  const copyAddress = useCallback(async () => {
-    if (publicKey) {
-      try {
-        await navigator.clipboard.writeText(publicKey.toBase58())
-        setCopying(true)
-        toast.success("Address copied to clipboard!")
-        setTimeout(() => setCopying(false), 1500)
-      } catch (error) {
-        console.error("Failed to copy address:", error)
-        toast.error("Failed to copy address. Please try again.")
-      }
-    }
-  }, [publicKey])
-
-  const truncatedAddress = publicKey ? `${publicKey.toBase58().slice(0, 4)}...${publicKey.toBase58().slice(-4)}` : ""
-
-  if (!connected) {
+  if (connected) {
     return (
+      <WalletMultiButton
+        className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 px-4 rounded transition-colors duration-200"
+        onClick={handleDisconnect}
+      />
+    )
+  }
+
+  return (
+    <>
       <Button
-        onClick={handleWalletClick}
-        variant="outline"
-        className="bg-black hover:bg-gray-900 text-white border-gray-700 transition-all"
-        disabled={connecting}
+        onClick={handleConnect}
+        disabled={connecting || isConnecting}
+        className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
       >
-        {connecting ? (
+        {connecting || isConnecting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Connecting...
           </>
         ) : (
-          <>
-            <Wallet className="mr-2 h-4 w-4" />
-            Connect Wallet
-          </>
+          "Connect Wallet"
         )}
       </Button>
-    )
-  }
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="bg-black hover:bg-gray-900 text-white border-gray-700 transition-all">
-          <Wallet className="mr-2 h-4 w-4" />
-          {truncatedAddress}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Wallet</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={copyAddress}>
-          {copying ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
-          {copying ? "Copied!" : "Copy Address"}
-        </DropdownMenuItem>
-        {balance !== null && (
-          <DropdownMenuItem>
-            <Wallet className="mr-2 h-4 w-4" />
-            Balance: {balance.toFixed(4)} SOL
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem onClick={handleDisconnect}>
-          <Loader2 className="mr-2 h-4 w-4" />
-          Disconnect
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      {connectionError && (
+        <Alert variant="destructive" className="mt-2">
+          <AlertTitle>Wallet Connection Error</AlertTitle>
+          <AlertDescription>
+            {connectionError}
+            <p className="mt-2">If the problem persists, please contact support.</p>
+          </AlertDescription>
+        </Alert>
+      )}
+    </>
   )
 }
 

@@ -1,27 +1,33 @@
-'use client';
+"use client"
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from "react"
 
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [matches, setMatches] = useState<boolean>(false)
+  const [mounted, setMounted] = useState<boolean>(false)
+
+  const handleChange = useCallback((event: MediaQueryListEvent) => {
+    setMatches(event.matches)
+  }, [])
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true)
 
-    const mediaQuery = window.matchMedia(query);
-    setMatches(mediaQuery.matches);
+    if (typeof window.matchMedia !== "function") {
+      console.warn("matchMedia is not supported in this browser")
+      return
+    }
 
-    const handler = (event: MediaQueryListEvent) => {
-      setMatches(event.matches);
-    };
+    const mediaQuery = window.matchMedia(query)
+    setMatches(mediaQuery.matches)
 
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, [query]);
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
+  }, [query, handleChange])
 
   // Prevent hydration mismatch by returning false until mounted
-  if (!mounted) return false;
+  if (!mounted) return false
 
-  return matches;
+  return matches
 }
+

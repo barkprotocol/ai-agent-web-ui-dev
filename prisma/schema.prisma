@@ -14,6 +14,7 @@ model SavedPrompt {
   title           String   @db.VarChar(255)
   content         String   @db.Text
   usageFrequency  Int      @default(0)
+  hasEAPAccess    Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   lastUsedAt      DateTime?

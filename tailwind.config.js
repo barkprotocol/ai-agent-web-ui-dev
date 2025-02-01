@@ -45,6 +45,11 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        bark: {
+          DEFAULT: "#DBCFC7",
+          dark: "#8C7A6B",
+          light: "#F5EFE9",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -52,8 +57,9 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        oswald: ["Oswald", "sans-serif"],
+        sans: ["var(--font-inter)", "sans-serif"],
+        oswald: ["var(--font-oswald)", "sans-serif"],
+        poppins: ["var(--font-poppins)", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
@@ -64,10 +70,20 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "fade-in": {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+        "fade-out": {
+          "0%": { opacity: 1 },
+          "100%": { opacity: 0 },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.3s ease-out",
+        "fade-out": "fade-out 0.3s ease-out",
       },
     },
   },

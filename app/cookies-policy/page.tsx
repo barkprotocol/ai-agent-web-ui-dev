@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import { sharedMetadata } from "@/components/shared-metadata"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = sharedMetadata({
   title: "Cookies Policy",
@@ -8,11 +10,18 @@ export const metadata: Metadata = sharedMetadata({
 })
 
 export default function CookiesPolicyPage() {
+  const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+
   return (
     <div className="container mx-auto px-4 py-16">
+      <nav className="mb-8">
+        <Link href="/" className="text-primary hover:underline">
+          ← Back to Home
+        </Link>
+      </nav>
       <h1 className="text-4xl font-bold mb-8">Cookies Policy</h1>
       <div className="prose dark:prose-invert max-w-none">
-        <p>Last updated: [Current Date]</p>
+        <p>Last updated: {currentDate}</p>
         <h2>1. What are Cookies?</h2>
         <p>
           Cookies are small text files that are placed on your device when you visit a website. They are widely used to
@@ -57,8 +66,19 @@ export default function CookiesPolicyPage() {
         <h2>6. Contact Us</h2>
         <p>
           If you have any questions about our Cookies Policy, please contact us at{" "}
-          <a href="mailto:privacy@barkprotocol.com">privacy@barkprotocol.com</a>.
+          <a href="mailto:privacy@barkprotocol.net" className="text-primary hover:underline">
+            privacy@barkprotocol.net
+          </a>
+          .
         </p>
+      </div>
+      <div className="mt-8 text-center">
+        <Button
+          onClick={() => window.print()}
+          className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80 transition-colors"
+        >
+          Print Cookies Policy
+        </Button>
       </div>
     </div>
   )

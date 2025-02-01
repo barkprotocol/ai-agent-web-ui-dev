@@ -4,60 +4,25 @@ interface SharedMetadataProps {
   title: string
   description: string
   keywords?: string[]
-  ogImage?: string
 }
 
-export function sharedMetadata({
-  title,
-  description,
-  keywords = [],
-  ogImage = "https://barkprotocol.com/og-image.jpg",
-}: SharedMetadataProps): Metadata {
-  const defaultKeywords = ["BARK Protocol", "AI Agent", "Solana", "DeFi", "Blockchain", "Artificial Intelligence"]
-
+export function sharedMetadata({ title, description, keywords = [] }: SharedMetadataProps): Metadata {
   return {
     title: `${title} | BARK AI Agent`,
     description,
-    keywords: [...defaultKeywords, ...keywords],
-    authors: [{ name: "BARK Protocol Team" }],
+    keywords: [...keywords, "BARK AI Agent", "Solana", "trading", "DeFi", "artificial intelligence"],
     openGraph: {
-      title: `${title} | BARK AI Agent`,
+      title,
       description,
       type: "website",
-      url: "https://barkprotocol.com",
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: "BARK AI Agent",
-        },
-      ],
+      url: "https://barkprotocol.net",
+      siteName: "BARK AI Agent",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} | BARK AI Agent`,
-      description,
-      images: [ogImage],
-      creator: "@barkprotocol",
+      site: "@bark_protocol",
+      creator: "@bark_protocol",
     },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-    icons: {
-      icon: "/favicon.ico",
-      shortcut: "/favicon-16x16.png",
-      apple: "/apple-touch-icon.png",
-    },
-    manifest: "/site.webmanifest",
   }
 }
 

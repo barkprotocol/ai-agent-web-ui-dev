@@ -1,42 +1,56 @@
 import type { ReactNode } from "react"
-import { Inter } from "next/font/google"
+import type { Metadata } from "next"
 import { Toaster } from "@/components/ui/sonner"
-import { ThemeProvider } from "@/components/provider-theme"
+import Header from "@/components/home/header"
+import Footer from "@/components/home/footer"
+import { ThemeProvider } from "@/components/theme-provider"
 import { WalletContextProvider } from "@/components/wallet-context-provider"
-import { Header } from "@/components/ui/layout/header"
-import { Footer } from "@/components/ui/layout/footer"
-import ErrorBoundary from "@/components/error-boundary"
+import { ErrorBoundary } from "@/components/error-boundary"
+import AuthProviders from "@/components/auth-providers"
+import { cn } from "@/lib/utils"
+import { Oswald, Inter, Poppins } from "next/font/google"
 import "@/app/styles/globals.css"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
+const oswald = Oswald({
+  subsets: ["latin"],
+  variable: "--font-oswald",
+})
 
-export const metadata = {
-  title: "BARK | AI Agent for Solana",
-  description: "AI-powered copilot for Solana blockchain interactions",
-  keywords: ["BARK", "AI", "Solana", "Blockchain", "DeFi"],
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+})
+
+const poppins = Poppins({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-poppins",
+})
+
+export const metadata: Metadata = {
+  title: "BARK AI Agent",
+  description: "Your intelligent copilot for Solana trading and DeFi interactions",
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`min-h-screen bg-background font-sans antialiased ${inter.variable}`}>
-        <ErrorBoundary>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <html lang="en" suppressHydrationWarning className={`${oswald.variable} ${inter.variable} ${poppins.variable}`}>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", inter.className)}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ErrorBoundary>
             <WalletContextProvider>
-              <div className="relative flex min-h-screen flex-col">
-                <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
-              <Toaster />
+              <AuthProviders>
+                <div className="flex min-h-screen flex-col">
+                  <Header />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                </div>
+                <Toaster />
+              </AuthProviders>
             </WalletContextProvider>
-          </ThemeProvider>
-        </ErrorBoundary>
+          </ErrorBoundary>
+        </ThemeProvider>
       </body>
     </html>
   )
 }
-
-
-
-import './globals.css'

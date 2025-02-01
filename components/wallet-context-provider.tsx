@@ -3,18 +3,17 @@
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base"
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react"
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-  TorusWalletAdapter,
-  LedgerWalletAdapter,
-} from "@solana/wallet-adapter-wallets"
+import { TorusWalletAdapter, LedgerWalletAdapter } from "@solana/wallet-adapter-wallets"
 import { clusterApiUrl } from "@solana/web3.js"
-import { useMemo, type ReactNode, useState, useEffect } from "react"
+import { useMemo, type ReactNode, useEffect } from "react"
+import { ErrorBoundary } from "@/components/error-boundary"
+import { toast } from "@/components/ui/use-toast"
+import { RPC_URL, HELIUS_RPC_URL } from "@/lib/config"
+import { usePrivy } from "@privy-io/react-auth"
+import { PrivyEmbeddedWallet } from "@/lib/privy-embedded-wallet"
+import { debugLog } from "@/lib/utils"
 
-// Import wallet adapter styles
 import "@solana/wallet-adapter-react-ui/styles.css"
-// Import custom wallet adapter styles
 import "@/app/styles/wallet-adapter.css"
 
 interface WalletContextProviderProps {
@@ -28,34 +27,45 @@ export function WalletContextProvider({
   network = WalletAdapterNetwork.Mainnet,
   endpoint: customEndpoint,
 }: WalletContextProviderProps) {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const endpoint = useMemo(() => customEndpoint || clusterApiUrl(network), [network, customEndpoint])
-
-  const wallets = useMemo(
-    () => [
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter({ network }),
-      new TorusWalletAdapter(),
-      new LedgerWalletAdapter(),
-    ],
-    [network],
+  const endpoint = useMemo(
+    () => customEndpoint || HELIUS_RPC_URL || RPC_URL || clusterApiUrl(network),
+    [network, customEndpoint],
   )
+  const { user } = usePrivy()
 
-  if (!mounted) {
-    return null
+  const wallets = useMemo(() => {
+    const baseWallets = [new TorusWalletAdapter(), new LedgerWalletAdapter()]
+
+    if (user?.wallet?.address) {
+      const privyWallet = new PrivyEmbeddedWallet(user.wallet.address, user.id)
+      return [privyWallet, ...baseWallets]
+    }
+
+    return baseWallets
+  }, [user])
+
+  const onError = (error: Error) => {
+    debugLog("Wallet error", error, { module: "WalletContextProvider", level: "error" })
+    console.error("Wallet error:", error)
+    toast({
+      title: "Wallet Error",
+      description: "An error occurred with your wallet. Please try again or contact support if the issue persists.",
+      variant: "destructive",
+    })
   }
 
+  useEffect(() => {
+    debugLog("Wallet context initialized", { network, endpoint }, { module: "WalletContextProvider" })
+  }, [network, endpoint])
+
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>{children}</WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <ErrorBoundary>
+      <ConnectionProvider endpoint={endpoint}>
+        <WalletProvider wallets={wallets} autoConnect onError={onError}>
+          <WalletModalProvider>{children}</WalletModalProvider>
+        </WalletProvider>
+      </ConnectionProvider>
+    </ErrorBoundary>
   )
 }
 

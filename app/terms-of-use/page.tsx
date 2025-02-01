@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { sharedMetadata } from "@/components/shared-metadata"
+import Link from "next/link"
 
 export const metadata: Metadata = sharedMetadata({
   title: "Terms of Use",
@@ -8,11 +9,18 @@ export const metadata: Metadata = sharedMetadata({
 })
 
 export default function TermsOfUsePage() {
+  const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+
   return (
     <div className="container mx-auto px-4 py-16">
+      <nav className="mb-8">
+        <Link href="/" className="text-primary hover:underline">
+          ← Back to Home
+        </Link>
+      </nav>
       <h1 className="text-4xl font-bold mb-8">Terms of Use</h1>
       <div className="prose dark:prose-invert max-w-none">
-        <p>Last updated: [Current Date]</p>
+        <p>Last updated: {currentDate}</p>
         <h2>1. Acceptance of Terms</h2>
         <p>
           By accessing or using the BARK AI Agent platform, you agree to be bound by these Terms of Use. If you do not
@@ -45,14 +53,25 @@ export default function TermsOfUsePage() {
         </p>
         <h2>7. Governing Law</h2>
         <p>
-          These Terms of Use shall be governed by and construed in accordance with the laws of [Jurisdiction], without
-          regard to its conflict of law provisions.
+          These Terms of Use shall be governed by and construed in accordance with the laws of the jurisdiction in which
+          BARK Protocol is registered, without regard to its conflict of law provisions.
         </p>
         <h2>8. Contact Information</h2>
         <p>
           If you have any questions about these Terms of Use, please contact us at{" "}
-          <a href="mailto:legal@barkprotocol.com">legal@barkprotocol.com</a>.
+          <a href="mailto:legal@barkprotocol.com" className="text-primary hover:underline">
+            legal@barkprotocol.com
+          </a>
+          .
         </p>
+      </div>
+      <div className="mt-8 text-center">
+        <button
+          onClick={() => window.print()}
+          className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80 transition-colors"
+        >
+          Print Terms of Use
+        </button>
       </div>
     </div>
   )

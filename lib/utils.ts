@@ -1,199 +1,192 @@
-import { Message as PrismaMessage } from '@prisma/client';
-import {
-  Attachment,
-  CoreToolMessage,
-  LanguageModelUsage,
-  Message,
-  ToolInvocation,
-} from 'ai';
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import type { Attachment, CoreToolMessage, LanguageModelUsage, Message, ToolInvocation } from "ai"
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 export function formatNumber(value: number): string {
   if (value >= 1_000_000_000) {
-    return `${(value / 1_000_000_000).toFixed(2)}B`;
+    return `${(value / 1_000_000_000).toFixed(2)}B`
   }
   if (value >= 1_000_000) {
-    return `${(value / 1_000_000).toFixed(2)}M`;
+    return `${(value / 1_000_000).toFixed(2)}M`
   }
   if (value >= 1_000) {
-    return `${(value / 1_000).toFixed(2)}K`;
+    return `${(value / 1_000).toFixed(2)}K`
   }
-  return value.toFixed(2);
+  return value.toFixed(2)
 }
 
 export function chunkArray<T>(arr: T[], chunkSize: number): T[][] {
-  const chunks: T[][] = [];
+  const chunks: T[][] = []
   for (let i = 0; i < arr.length; i += chunkSize) {
-    chunks.push(arr.slice(i, i + chunkSize));
+    chunks.push(arr.slice(i, i + chunkSize))
   }
-  return chunks;
+  return chunks
 }
 
-export function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  limit: number,
-): (...args: Parameters<T>) => void {
-  let inThrottle: boolean;
+export function throttle<T extends (...args: any[]) => any>(func: T, limit: number): (...args: Parameters<T>) => void {
+  let inThrottle: boolean
   return function (this: any, ...args: Parameters<T>) {
     if (!inThrottle) {
-      func.apply(this, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
+      func.apply(this, args)
+      inThrottle = true
+      setTimeout(() => (inThrottle = false), limit)
     }
-  };
+  }
 }
 
 export const isValidTokenUsage = (usage: LanguageModelUsage) =>
-  usage &&
-  !isNaN(usage.promptTokens) &&
-  !isNaN(usage.completionTokens) &&
-  !isNaN(usage.totalTokens);
+  usage && !isNaN(usage.promptTokens) && !isNaN(usage.completionTokens) && !isNaN(usage.totalTokens)
 
 export function formatDate(date: Date) {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
     hour12: false,
-  }).format(date);
+  }).format(date)
 }
 
 function addToolMessageToChat({
   toolMessage,
   messages,
 }: {
-  toolMessage: CoreToolMessage;
-  messages: Array<Message>;
+  toolMessage: CoreToolMessage
+  messages: Array<Message>
 }): Array<Message> {
   return messages.map((message) => {
-    if (!message.toolInvocations) return message;
+    if (!message.toolInvocations) return message
 
     return {
       ...message,
-      toolInvocations: message.toolInvocations.map((toolInvocation: { toolCallId: any; }) => {
+      toolInvocations: message.toolInvocations.map((toolInvocation: { toolCallId: any }) => {
         const toolResult = toolMessage.content.find(
-          (tool: { toolCallId: any; }) => tool.toolCallId === toolInvocation.toolCallId,
-        );
+          (tool: { toolCallId: any }) => tool.toolCallId === toolInvocation.toolCallId,
+        )
 
         if (toolResult) {
           return {
             ...toolInvocation,
-            state: 'result',
+            state: "result",
             result: toolResult.result,
-          };
+          }
         }
 
-        return toolInvocation;
+        return toolInvocation
       }),
-    };
-  });
+    }
+  })
 }
 
-export function convertToUIMessages(
-  messages: Array<PrismaMessage>,
-): Array<Message> {
+export function convertToUIMessages(messages: Array<any>): Array<Message> {
   return messages.reduce((chatMessages: Array<Message>, rawMessage) => {
-    const message = rawMessage;
+    const message = rawMessage
 
-    let parsedContent = message.content as any;
+    let parsedContent = message.content as any
 
     try {
-      parsedContent = JSON.parse(parsedContent);
+      parsedContent = JSON.parse(parsedContent)
     } catch (error) {
-      if (
-        message.content ||
-        (Array.isArray(message.toolInvocations) &&
-          message.toolInvocations.length > 0)
-      ) {
+      if (message.content || (Array.isArray(message.toolInvocations) && message.toolInvocations.length > 0)) {
         chatMessages.push({
           id: message.id,
-          role: message.role as Message['role'],
-          content: message.content ?? '',
-          toolInvocations:
-            message.toolInvocations as unknown as ToolInvocation[],
-          experimental_attachments:
-            message.experimental_attachments as unknown as Attachment[],
+          role: message.role as Message["role"],
+          content: message.content ?? "",
+          toolInvocations: message.toolInvocations as unknown as ToolInvocation[],
+          experimental_attachments: message.experimental_attachments as unknown as Attachment[],
           createdAt: message.createdAt,
-        });
+        })
       }
 
-      return chatMessages;
+      return chatMessages
     }
 
-    message.content = parsedContent;
+    message.content = parsedContent
 
-    if (message.role === 'tool') {
+    if (message.role === "tool") {
       return addToolMessageToChat({
         toolMessage: message as unknown as CoreToolMessage,
         messages: chatMessages,
-      });
+      })
     }
 
-    let textContent = '';
-    const toolInvocations: Array<ToolInvocation> = [];
-    const attachments: Array<Attachment> = [];
+    let textContent = ""
+    const toolInvocations: Array<ToolInvocation> = []
+    const attachments: Array<Attachment> = []
 
-    if (
-      typeof message.content === 'object' &&
-      message.content &&
-      'content' in message.content
-    ) {
-      message.content = (message.content as any)?.content || [];
+    if (typeof message.content === "object" && message.content && "content" in message.content) {
+      message.content = (message.content as any)?.content || []
     }
 
-    if (typeof message.content === 'string') {
-      textContent = message.content;
+    if (typeof message.content === "string") {
+      textContent = message.content
     } else if (Array.isArray(message.content)) {
       for (const c of message.content as any) {
-        if (!c) continue;
-        const content = c as any;
+        if (!c) continue
+        const content = c as any
 
         switch (content.type) {
-          case 'text':
-            textContent += content.text;
-            break;
-          case 'tool-call':
+          case "text":
+            textContent += content.text
+            break
+          case "tool-call":
             toolInvocations.push({
-              state: 'call',
+              state: "call",
               toolCallId: content.toolCallId,
               toolName: content.toolName,
               args: content.args,
-            });
-            break;
-          case 'image':
+            })
+            break
+          case "image":
             attachments.push({
               url: content.image,
-              name: 'image.png',
-              contentType: 'image/png',
-            });
-            break;
+              name: "image.png",
+              contentType: "image/png",
+            })
+            break
         }
       }
     }
 
     chatMessages.push({
       id: message.id,
-      role: message.role as Message['role'],
+      role: message.role as Message["role"],
       content: textContent,
       toolInvocations,
       experimental_attachments: attachments,
       createdAt: message.createdAt,
-    });
+    })
 
-    return chatMessages;
-  }, []);
+    return chatMessages
+  }, [])
 }
 
 export function logWithTiming(startTime: number, message: string) {
-  const elapsedTime = (performance.now() - startTime).toFixed(1);
+  const elapsedTime = (performance.now() - startTime).toFixed(1)
 
-  console.log(`${message} (${elapsedTime}ms)`);
+  console.log(`${message} (${elapsedTime}ms)`)
 }
+
+export function debugLog(message: string, data: any, options: { module: string; level?: "info" | "warn" | "error" }) {
+  const { module, level = "info" } = options
+  const timestamp = new Date().toISOString()
+  const logMessage = `[${timestamp}] [${module}] [${level.toUpperCase()}]: ${message}`
+
+  switch (level) {
+    case "warn":
+      console.warn(logMessage, data)
+      break
+    case "error":
+      console.error(logMessage, data)
+      break
+    default:
+      console.log(logMessage, data)
+  }
+}
+
