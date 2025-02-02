@@ -59,10 +59,28 @@ export const INTEGRATIONS: Integration[] = [
   {
     icon: 'integrations/defined_fi.svg',
     label: 'Defined Fi',
-    description: 'Discover unbiassed trending tokens',
+    description: 'Discover unbiased trending tokens',
     theme: {
       primary: '#B0EECF', // Orange
       secondary: '#181432', // White
+    },
+  },
+  {
+    icon: 'integrations/metaplex.svg',
+    label: 'Metaplex',
+    description: 'Build and manage NFTs on Solana',
+    theme: {
+      primary: '#000000', // Black
+      secondary: '#FFFFFF', // White
+    },
+  },
+  {
+    icon: 'integrations/helius.svg',
+    label: 'Helius',
+    description: 'Next-gen blockchain analytics and APIs',
+    theme: {
+      primary: '#F97316', // Orange
+      secondary: '#F3F4F6', // Light Gray
     },
   },
 ];

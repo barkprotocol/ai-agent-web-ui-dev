@@ -1,9 +1,7 @@
 'use client';
 
 import React from 'react';
-
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
-
 import {
   Card,
   CardContent,
@@ -31,27 +29,23 @@ interface PriceChartProps {
   };
 }
 
-function formatDate(time: number, timeFrame: TIMEFRAME) {
-  switch (timeFrame) {
-    case TIMEFRAME.DAYS:
-      return new Date(time).toLocaleDateString(undefined, {
-        month: 'short',
-        day: '2-digit',
-      });
-    case TIMEFRAME.HOURS:
-      return new Date(time).toLocaleTimeString();
-    default:
-      return new Date(time).toLocaleDateString(undefined, {
-        month: 'short',
-        day: '2-digit',
-      });
-  }
-}
+const formatDate = (time: number, timeFrame: TIMEFRAME): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'short',
+    day: '2-digit',
+  };
 
-function shortenAddress(addr: string) {
+  if (timeFrame === TIMEFRAME.HOURS) {
+    return new Date(time).toLocaleTimeString();
+  }
+
+  return new Date(time).toLocaleDateString(undefined, options);
+};
+
+const shortenAddress = (addr: string): string => {
   if (addr.length <= 10) return addr;
-  return addr.slice(0, 4) + '...' + addr.slice(-4);
-}
+  return `${addr.slice(0, 4)}...${addr.slice(-4)}`;
+};
 
 export default function PriceChart({
   data,
@@ -103,9 +97,7 @@ export default function PriceChart({
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  formatter={(value) => {
-                    return formatChartPrice(Number(value));
-                  }}
+                  formatter={(value) => formatChartPrice(Number(value))}
                 />
               }
             />

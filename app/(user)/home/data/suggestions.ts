@@ -8,48 +8,58 @@ export const SUGGESTIONS: Suggestion[] = [
   {
     id: 'launch-token',
     title: 'Launch a new token',
-    subtitle: 'deploy a new token on pump.fun',
+    subtitle: 'Deploy a new token on pump.fun',
   },
   {
     id: 'swap-sol-usdc',
     title: 'Swap 1 SOL for USDC',
-    subtitle: 'using Jupiter to swap on Solana',
+    subtitle: 'Using Jupiter to swap on Solana',
   },
   {
     id: 'solana-trends',
     title: "What's trending on Solana?",
-    subtitle: 'find the current market trends',
+    subtitle: 'Find the current market trends',
   },
   {
     id: 'price-feed',
     title: "What's the price of SOL?",
-    subtitle: 'find the current price of SOL',
+    subtitle: 'Find the current price of SOL',
   },
   {
     id: 'top-gainers-last-24h',
     title: 'Top gainers in the last 24h',
-    subtitle: 'find the top gainers in the last 24 hours',
+    subtitle: 'Find the top gainers in the last 24 hours',
   },
   {
     id: 'check-my-wallet',
     title: 'Check my wallet',
-    subtitle: 'check the portfolio of your wallet',
+    subtitle: 'Check the portfolio of your wallet',
   },
-  // {
-  //   id: 'sell-everything-buy-neur',
-  //   title: 'Sell everything and buy $BARK',
-  //   subtitle: 'swap all your tokens for $BARK',
-  // },
-  // {
-  //   id: 'phantom-updates',
-  //   title: 'Any updates from @phantom recently?',
-  //   subtitle: 'summarize the latest tweets from @phantom',
-  // },
-  // {
-  //     id: "toly-updates",
-  //     title: "What has toly been doing recently?",
-  //     subtitle: "summarize his recent tweets"
-  // },
+  {
+    id: 'bark-token',
+    title: 'Get $BARK Token',
+    subtitle: 'Acquire and stake $BARK token for rewards and access',
+  },
+  {
+    id: 'charity-support',
+    title: 'Support Charity via NFT',
+    subtitle: 'Use your NFTs to contribute to charitable causes',
+  },
+  {
+    id: 'nft-collections',
+    title: 'Explore NFT Collections',
+    subtitle: 'Browse exclusive and limited-edition NFT collections on Solana',
+  },
+  {
+    id: 'solana-blinks',
+    title: 'Create and Share Solana Blinks',
+    subtitle: 'Utilize the Solana blockchain for interactive NFT experiences',
+  },
+  {
+    id: 'swap-sol-to-bark',
+    title: 'Swap SOL for $BARK',
+    subtitle: 'Swap your SOL for $BARK to stake and earn rewards',
+  },
 ];
 
 export function getRandomSuggestions(count: number): Suggestion[] {

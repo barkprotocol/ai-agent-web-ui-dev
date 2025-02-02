@@ -11,7 +11,7 @@ import {
 
 import Image from 'next/image';
 
-import { SavedPrompt } from '@prisma/client';
+import SavedPrompt from '@prisma/client';
 import { Attachment, JSONValue, Message } from 'ai';
 import { useChat } from 'ai/react';
 import {
@@ -31,7 +31,7 @@ import 'yet-another-react-lightbox/styles.css';
 import { getToolConfig } from '@/ai/providers';
 import { Confirmation } from '@/components/confimation';
 import { FloatingWallet } from '@/components/floating-wallet';
-import Logo from '@/components/logo';
+import { Logo } from '@/components/ui/logo';
 import { ToolResult } from '@/components/message/tool-result';
 import { SavedPromptsMenu } from '@/components/saved-prompts-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';

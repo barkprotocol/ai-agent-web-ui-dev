@@ -115,7 +115,7 @@ const commonKnowledge = {
       token: "BARK",
       description: "The native token of BARK Protocol",
       twitter: "@bark_protocol",
-      website: "https://barkprotocol.com/",
+      website: "https://barkprotocol.net/",
       address: "2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg",
     },
     { user: "bark_protocol", description: "BARK Protocol", twitter: "@bark_protocol", wallet: "BARKkeAwhTuFzcLHX4DjotRsmjXQ1MshGrZbn1CUQqMo" },
