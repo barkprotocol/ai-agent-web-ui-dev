@@ -321,9 +321,9 @@ export function HomeContent() {
   const meetsTokenBalance = useMemo(() => {
     if (!portfolio || !portfolio.tokens) return false;
 
-    // Find the BARK token
+    // Find the NEUR token
     const neurToken = portfolio.tokens.find(
-      (token) => token.mint === process.env.NEXT_PUBLIC_BARK_MINT,
+      (token) => token.mint === process.env.NEXT_PUBLIC_NEUR_MINT,
     );
 
     // Check the balance
@@ -614,8 +614,8 @@ export function HomeContent() {
                     Neur Holder Trial
                   </h2>
                   <div className="text-muted-foreground">
-                    Hold $BARK tokens in your embedded wallet for{' '}
-                    <Badge>BETA</Badge> access. Deposit BARK tokens to your
+                    Hold $NEUR tokens in your embedded wallet for{' '}
+                    <Badge>BETA</Badge> access. Deposit NEUR tokens to your
                     active embedded wallet to continue.
                   </div>
                 </div>
@@ -626,7 +626,7 @@ export function HomeContent() {
                       Neur Tokens Required
                     </span>
                     <span className="text-base font-semibold sm:text-lg">
-                      {getTrialTokensFloat()} BARK
+                      {getTrialTokensFloat()} NEUR
                     </span>
                   </div>
                 </div>
