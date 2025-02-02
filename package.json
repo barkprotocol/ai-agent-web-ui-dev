@@ -116,6 +116,7 @@
     "uuid": "^11.0.5",
     "vaul": "^1.1.2",
     "viem": "latest",
+    "webpack": "^5.97.1",
     "yet-another-react-lightbox": "^3.21.7",
     "zod": "^3.24.1",
     "zustand": "^5.0.3"
@@ -128,6 +129,7 @@
     "@types/node": "^22.13.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "@types/tailwindcss": "^3.1.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.19.0",
     "eslint-config-next": "^15.1.6",

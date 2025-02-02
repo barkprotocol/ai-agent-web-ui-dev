@@ -13,6 +13,7 @@ interface Section {
   description: string
   icon: React.ComponentType<{ className?: string }>
   imageUrl: string
+  blurDataUrl?: string
 }
 
 const sections: Section[] = [
@@ -22,6 +23,7 @@ const sections: Section[] = [
       "Start by connecting your Solana wallet to access BARK AI Agent features and participate in the ecosystem.",
     icon: Coins,
     imageUrl: "/placeholder.svg?height=400&width=600",
+    blurDataUrl: "/placeholder-blur.svg",
   },
   {
     title: "DeFi Protocol Integration",
@@ -29,6 +31,7 @@ const sections: Section[] = [
       "Seamlessly integrate with leading Solana protocols like Helius, Jupiter, Magic Eden, and more for comprehensive DeFi functionality.",
     icon: Link,
     imageUrl: "/placeholder.svg?height=400&width=600",
+    blurDataUrl: "/placeholder-blur.svg",
   },
   {
     title: "AI-Powered Trading",
@@ -36,6 +39,7 @@ const sections: Section[] = [
       "Leverage advanced AI algorithms for smart, automated trading strategies tailored to your preferences and risk tolerance.",
     icon: Bot,
     imageUrl: "/placeholder.svg?height=400&width=600",
+    blurDataUrl: "/placeholder-blur.svg",
   },
   {
     title: "Real-Time Market Analysis",
@@ -43,6 +47,7 @@ const sections: Section[] = [
       "Access instant insights with our real-time market analysis tools, helping you make informed decisions in the fast-paced crypto market.",
     icon: BarChart,
     imageUrl: "/placeholder.svg?height=400&width=600",
+    blurDataUrl: "/placeholder-blur.svg",
   },
   {
     title: "Lightning-Fast Transactions",
@@ -50,6 +55,7 @@ const sections: Section[] = [
       "Execute trades with unprecedented speed using our optimized transaction processing system built on Solana.",
     icon: Zap,
     imageUrl: "/placeholder.svg?height=400&width=600",
+    blurDataUrl: "/placeholder-blur.svg",
   },
   {
     title: "Enhanced Security",
@@ -57,6 +63,7 @@ const sections: Section[] = [
       "Benefit from state-of-the-art security measures, including multi-factor authentication and cold storage options for your assets.",
     icon: Shield,
     imageUrl: "/placeholder.svg?height=400&width=600",
+    blurDataUrl: "/placeholder-blur.svg",
   },
   {
     title: "Community Insights",
@@ -64,6 +71,7 @@ const sections: Section[] = [
       "Gain valuable insights from our community of traders and analysts, and participate in collaborative decision-making.",
     icon: Users,
     imageUrl: "/placeholder.svg?height=400&width=600",
+    blurDataUrl: "/placeholder-blur.svg",
   },
 ]
 
@@ -143,6 +151,8 @@ export default function HowItWorks() {
                         imageLoading ? "opacity-0" : "opacity-100",
                       )}
                       priority
+                      placeholder="blur"
+                      blurDataURL={sections[activeSection].blurDataUrl} // Add the blur placeholder
                       onLoad={() => setImageLoading(false)}
                     />
                     {imageLoading && (
@@ -160,4 +170,3 @@ export default function HowItWorks() {
     </section>
   )
 }
-

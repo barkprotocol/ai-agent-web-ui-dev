@@ -19,7 +19,7 @@ export default function CTA() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col items-center text-center">
-          <h2 id="cta-heading" className="text-3xl sm:text-4xl font-bold mb-6 text-white">
+          <h2 id="cta-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
             Empower Your Solana Trading with BARK AI
           </h2>
           <p className="text-lg sm:text-xl mb-8 text-white/90 max-w-2xl">
@@ -29,13 +29,14 @@ export default function CTA() {
           <Button
             asChild
             size="lg"
-            className="font-medium px-8 py-3 text-lg bg-primary hover:bg-primary/90 text-primary-foreground"
+            className="font-medium px-8 py-3 text-lg bg-primary hover:bg-primary/90 text-primary-foreground focus:ring-4 focus:ring-primary/50 transition-all"
           >
-            <Link href="/app">Get Started Now</Link>
+            <Link href="/app" aria-label="Get started with BARK AI">
+              Get Started Now
+            </Link>
           </Button>
         </div>
       </div>
     </section>
   )
 }
-

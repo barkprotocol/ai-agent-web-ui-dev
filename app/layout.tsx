@@ -11,9 +11,9 @@ import { cn } from "@/lib/utils";
 import { Inter, Oswald, Poppins } from "next/font/google";
 import "@/app/styles/globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const oswald = Oswald({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-oswald", display: "swap" });
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-poppins", display: "swap" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap", preload: true });
+const oswald = Oswald({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-oswald", display: "swap", preload: true });
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-poppins", display: "swap", preload: true });
 
 export const metadata: Metadata = {
   title: "BARK AI Agent",
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <ErrorBoundary>
             <WalletContextProvider>
               <AuthProviders>
-                <div className="flex min-h-screen flex-col">
+                <div className="flex flex-col min-h-screen">
                   <Header />
                   <main className="flex-1">{children}</main>
                   <Footer />

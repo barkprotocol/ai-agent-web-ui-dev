@@ -55,6 +55,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-size: 14px;
   }
 
   html {
@@ -69,7 +70,13 @@
 
   button,
   a {
-    @apply min-h-[44px] min-w-[44px];
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Custom Focus Styles for Accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary;
   }
 }
 
@@ -82,5 +89,26 @@
   .mb-safe {
     margin-bottom: max(1rem, env(safe-area-inset-bottom));
   }
-}
 
+  /* Smooth Transition for UI Elements */
+  .transition-soft {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* Custom container size */
+  .container-lg {
+    max-width: 1400px;
+    margin: 0 auto;
+    @apply px-6;
+  }
+
+  /* Text readability improvement */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Hover shadow effect */
+  .shadow-hover:hover {
+    @apply shadow-md;
+  }
+}

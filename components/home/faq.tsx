@@ -49,10 +49,11 @@ export default function FAQ() {
           {faqs.map((faq, index) => (
             <div key={index} className="mb-4">
               <button
-                className="flex justify-between items-center w-full text-left p-4 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-200"
+                className="flex justify-between items-center w-full text-left p-4 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
                 onClick={() => toggleQuestion(index)}
                 aria-expanded={activeIndex === index}
                 aria-controls={`faq-answer-${index}`}
+                aria-label={`Toggle answer for: ${faq.question}`}
               >
                 <span className="text-lg font-semibold">{faq.question}</span>
                 <ChevronDown
@@ -82,4 +83,3 @@ export default function FAQ() {
     </section>
   )
 }
-

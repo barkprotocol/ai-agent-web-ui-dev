@@ -1,4 +1,5 @@
 import type { NextConfig } from "next"
+import type { Configuration } from "webpack"
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -6,14 +7,15 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["ucarecdn.com", "cryptologos.cc"],
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config: Configuration, { isServer }: { isServer: boolean }) => {
     if (!isServer) {
+      config.resolve = config.resolve || {}
       config.resolve.fallback = {
-        ...config.resolve.fallback,
+        ...(config.resolve.fallback || {}),
         fs: false,
         net: false,
         tls: false,
-        crypto: require.resolve("crypto-browserify"),
+        crypto: false,
       }
     }
     return config
@@ -21,4 +23,3 @@ const nextConfig: NextConfig = {
 }
 
 export default nextConfig
-

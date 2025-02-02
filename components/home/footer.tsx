@@ -59,9 +59,9 @@ export default function Footer() {
                     className="text-muted-foreground hover:text-foreground transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={link.name}
+                    aria-label={`Follow us on ${link.name}`}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-5 w-5 hover:scale-110 transition-transform" />
                   </a>
                 )
               })}
@@ -76,6 +76,7 @@ export default function Footer() {
                     <Link
                       href={typeof item === "string" ? "#" : item.href}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      aria-label={typeof item === "string" ? item : item.name}
                     >
                       {typeof item === "string" ? item : item.name}
                     </Link>
@@ -96,6 +97,7 @@ export default function Footer() {
                   key={link.name}
                   href={link.href}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={`Go to ${link.name}`}
                 >
                   {link.name}
                 </Link>
@@ -107,4 +109,3 @@ export default function Footer() {
     </footer>
   )
 }
-

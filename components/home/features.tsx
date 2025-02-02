@@ -36,15 +36,18 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-16 bg-background">
+    <section className="py-16 bg-background" role="region" aria-labelledby="features-title">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8 text-center">Powerful Features for DeFi Success</h2>
+        <h2 id="features-title" className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8 text-center">
+          Powerful Features for DeFi Success
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-card p-4 sm:p-6 rounded-lg shadow-lg focus-within:ring-2 focus-within:ring-primary focus-within:ring-opacity-50 transition-all duration-200 hover:shadow-xl"
+              className="bg-card p-4 sm:p-6 rounded-lg shadow-lg focus-within:ring-2 focus-within:ring-primary focus-within:ring-opacity-50 transition-all duration-200 hover:shadow-xl hover:scale-105"
               tabIndex={0}
+              aria-label={`Learn more about ${feature.title}`}
             >
               <feature.icon className="h-8 w-8 sm:h-10 sm:w-10 text-[#DBCFC7] mb-3 sm:mb-4" aria-hidden="true" />
               <h3 className="text-lg sm:text-xl font-semibold mb-2">{feature.title}</h3>
@@ -56,4 +59,3 @@ export default function Features() {
     </section>
   )
 }
-

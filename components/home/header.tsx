@@ -76,6 +76,7 @@ const MobileMenu = ({
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
   const isMobile = useMediaQuery("(max-width: 768px)")
   const { isAuthenticated, logout } = useAuth()
@@ -157,12 +158,22 @@ export default function Header() {
           {isMobile && (
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="md:hidden">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="md:hidden"
+                  onClick={() => setIsMenuOpen((prev) => !prev)}
+                >
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <MobileMenu isOpen={false} onClose={() => {}} isAuthenticated={isAuthenticated} logout={logout} />
+              <MobileMenu
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+                isAuthenticated={isAuthenticated}
+                logout={logout}
+              />
             </Sheet>
           )}
         </div>
@@ -170,4 +181,3 @@ export default function Header() {
     </header>
   )
 }
-
