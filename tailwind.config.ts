@@ -1,71 +1,59 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
+/** @type {Config} */
 const config: Config = {
-  darkMode: "class",
   content: [
-    "./app/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./pages/**/*.{ts,tsx}",
-    "./ui/**/*.{ts,tsx}",
+    './app/**/*.{ts,tsx}', // Add any folders where you're using Tailwind classes
+    './components/**/*.{ts,tsx}',
+    './pages/**/*.{ts,tsx}',
+    './node_modules/@tailwindcss/forms/**/*.{ts,tsx}', // If using Tailwind forms plugin
   ],
   theme: {
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: "hsl(var(--card))",
-        "card-foreground": "hsl(var(--card-foreground))",
-        popover: "hsl(var(--popover))",
-        "popover-foreground": "hsl(var(--popover-foreground))",
-        primary: "hsl(var(--primary))",
-        "primary-foreground": "hsl(var(--primary-foreground))",
-        secondary: "hsl(var(--secondary))",
-        "secondary-foreground": "hsl(var(--secondary-foreground))",
-        muted: "hsl(var(--muted))",
-        "muted-foreground": "hsl(var(--muted-foreground))",
-        accent: "hsl(var(--accent))",
-        "accent-foreground": "hsl(var(--accent-foreground))",
-        destructive: "hsl(var(--destructive))",
-        "destructive-foreground": "hsl(var(--destructive-foreground))",
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        xl: "1rem",
-        "2xl": "1.5rem",
-        "3xl": "2rem",
+        background: 'hsl(var(--background) / 1)',
+        foreground: 'hsl(var(--foreground) / 1)',
+        primary: 'hsl(var(--primary) / 1)',
+        'primary-foreground': 'hsl(var(--primary-foreground) / 1)',
+        secondary: 'hsl(var(--secondary) / 1)',
+        'secondary-foreground': 'hsl(var(--secondary-foreground) / 1)',
+        muted: 'hsl(var(--muted) / 1)',
+        'muted-foreground': 'hsl(var(--muted-foreground) / 1)',
+        accent: 'hsl(var(--accent) / 1)',
+        'accent-foreground': 'hsl(var(--accent-foreground) / 1)',
+        destructive: 'hsl(var(--destructive) / 1)',
+        'destructive-foreground': 'hsl(var(--destructive-foreground) / 1)',
+        border: 'hsl(var(--border) / 1)',
+        input: 'hsl(var(--input) / 1)',
+        ring: 'hsl(var(--ring) / 1)',
       },
       fontFamily: {
-        title: ["Oswald", "sans-serif"], // Preferred font for titles
-        body: ["Poppins", "sans-serif"], // Preferred font for body text
-        display: ["Syne", "sans-serif"], // Additional font
+        inter: ['var(--font-inter)', 'sans-serif'],
+        oswald: ['var(--font-oswald)', 'sans-serif'],
+        poppins: ['var(--font-poppins)', 'sans-serif'],
+      },
+      borderRadius: {
+        DEFAULT: '0.5rem',
+      },
+      fontSize: {
+        xs: ['14px', { lineHeight: '20px' }],
+        sm: ['16px', { lineHeight: '24px' }],
+        base: ['18px', { lineHeight: '28px' }],
+        lg: ['20px', { lineHeight: '30px' }],
       },
       screens: {
-        xs: "400px", // Custom small screen size
-      },
-      spacing: {
-        18: "4.5rem", // Custom spacing for padding/margins
-        22: "5.5rem",
-        26: "6.5rem",
-      },
-      boxShadow: {
-        "soft-lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1)", // Soft shadow effect
-        "soft-xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
-      },
-      transitionProperty: {
-        height: "height",
-        width: "width",
-        spacing: "margin, padding",
+        'xs': '360px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
       },
     },
   },
   plugins: [
-    require("@tailwindcss/forms"), // Improves form styling
-    require("@tailwindcss/typography"), // Enhances typography
-    require("@tailwindcss/aspect-ratio"), // Enables aspect ratios
+    require('@tailwindcss/forms'), // Add any Tailwind plugins you use
   ],
+  darkMode: 'class', // Enables dark mode support
 };
 
 export default config;

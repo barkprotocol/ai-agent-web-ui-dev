@@ -48,8 +48,9 @@ export default function TermsOfUsePage() {
         </p>
         <h2>6. Modifications to Terms</h2>
         <p>
-          We reserve the right to modify these Terms of Use at any time. Your continued use of the platform after any
-          such changes constitutes your acceptance of the new Terms of Use.
+          We reserve the right to modify these Terms of Use at any time. If we make significant changes, we will notify
+          you via email or through a notification on the platform. Your continued use of the platform after such changes
+          constitutes your acceptance of the new Terms of Use.
         </p>
         <h2>7. Governing Law</h2>
         <p>
@@ -68,7 +69,8 @@ export default function TermsOfUsePage() {
       <div className="mt-8 text-center">
         <button
           onClick={() => window.print()}
-          className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80 transition-colors"
+          className="bg-primary text-primary-foreground px-8 py-3 text-lg rounded hover:bg-primary/90 transition-colors"
+          aria-label="Print Terms of Use"
         >
           Print Terms of Use
         </button>
@@ -76,4 +78,3 @@ export default function TermsOfUsePage() {
     </div>
   )
 }
-
