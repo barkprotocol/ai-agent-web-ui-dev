@@ -65,10 +65,8 @@ function addToolMessageToChat({
 
     return {
       ...message,
-      toolInvocations: message.toolInvocations.map((toolInvocation: { toolCallId: any }) => {
-        const toolResult = toolMessage.content.find(
-          (tool: { toolCallId: any }) => tool.toolCallId === toolInvocation.toolCallId,
-        )
+      toolInvocations: message.toolInvocations.map((toolInvocation) => {
+        const toolResult = toolMessage.content.find((tool) => tool.toolCallId === toolInvocation.toolCallId)
 
         if (toolResult) {
           return {
@@ -98,8 +96,8 @@ export function convertToUIMessages(messages: Array<any>): Array<Message> {
           id: message.id,
           role: message.role as Message["role"],
           content: message.content ?? "",
-          toolInvocations: message.toolInvocations as unknown as ToolInvocation[],
-          experimental_attachments: message.experimental_attachments as unknown as Attachment[],
+          toolInvocations: message.toolInvocations as ToolInvocation[],
+          experimental_attachments: message.experimental_attachments as Attachment[],
           createdAt: message.createdAt,
         })
       }
@@ -111,7 +109,7 @@ export function convertToUIMessages(messages: Array<any>): Array<Message> {
 
     if (message.role === "tool") {
       return addToolMessageToChat({
-        toolMessage: message as unknown as CoreToolMessage,
+        toolMessage: message as CoreToolMessage,
         messages: chatMessages,
       })
     }

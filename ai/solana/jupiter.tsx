@@ -1,21 +1,15 @@
-import Image from 'next/image';
+import Image from "next/image"
 
-import { z } from 'zod';
-
-import { formatNumber } from '@/lib/format';
-import { Placeholder } from '@/lib/placeholder';
-import {
-  type TokenPrice,
-  getJupiterTokenPrice,
-  searchJupiterTokens,
-} from '@/server/actions/jupiter';
+import { z } from "zod"
+import { Placeholder } from "@/lib/placeholder"
+import { type TokenPrice, getJupiterTokenPrice, searchJupiterTokens } from "@/server/actions/jupiter"
 
 // Types
 interface JupiterToken {
-  address: string;
-  name: string;
-  symbol: string;
-  logoURI: string | null;
+  address: string
+  name: string
+  symbol: string
+  logoURI: string | null
 }
 
 function TokenCard({ token }: { token: JupiterToken }) {
@@ -24,20 +18,17 @@ function TokenCard({ token }: { token: JupiterToken }) {
       <div className="flex items-center gap-3">
         <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl">
           <Image
-            src={
-              token.logoURI ||
-              Placeholder.generate({ width: 40, height: 40, text: 'Token' })
-            }
+            src={token.logoURI || Placeholder.generate({ width: 40, height: 40, text: "Token" || "/placeholder.svg" })}
             alt={token.name}
             className="object-cover"
             fill
             sizes="40px"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = Placeholder.generate({
+              ;(e.target as HTMLImageElement).src = Placeholder.generate({
                 width: 40,
                 height: 40,
                 text: token.symbol,
-              });
+              })
             }}
           />
         </div>
@@ -56,29 +47,26 @@ function TokenCard({ token }: { token: JupiterToken }) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function PriceCard({
   token,
   price,
 }: {
-  token: JupiterToken;
-  price: TokenPrice;
+  token: JupiterToken
+  price: TokenPrice
 }) {
-  const priceValue = parseFloat(price.price);
+  const priceValue = Number.parseFloat(price.price)
 
-  const formattedPrice =
-    priceValue < 1
-      ? priceValue.toFixed(6)
-      : priceValue.toFixed(2);
+  const formattedPrice = priceValue < 1 ? priceValue.toFixed(6) : priceValue.toFixed(2)
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-muted/50 p-4">
       <div className="flex items-center gap-3">
         <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl">
           <Image
-            src={token.logoURI || '/placeholder.png'}
+            src={token.logoURI || "/placeholder.png"}
             alt={token.name}
             className="object-cover"
             fill
@@ -86,7 +74,7 @@ function PriceCard({
             onError={(e) => {
               // @ts-expect-error - Type 'string' is not assignable to type 'never'
               e.target.src =
-                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png';
+                "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
             }}
           />
         </div>
@@ -103,73 +91,65 @@ function PriceCard({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export const jupiterTools = {
   searchToken: {
-    displayName: '🔍 Search Token',
+    displayName: "🔍 Search Token",
     isCollapsible: true,
     description:
-      'Search for any Solana token by name or symbol to get its contract address (mint), along with detailed information like volume and logo. Useful for getting token addresses for further operations.',
+      "Search for any Solana token by name or symbol to get its contract address (mint), along with detailed information like volume and logo. Useful for getting token addresses for further operations.",
     parameters: z.object({
-      query: z.string().describe('Token name or symbol to search for'),
+      query: z.string().describe("Token name or symbol to search for"),
     }),
     execute: async ({ query }: { query: string }) => {
       try {
-        const tokens = await searchJupiterTokens(query);
-        const searchQuery = query.toLowerCase();
+        const tokens = await searchJupiterTokens(query)
+        const searchQuery = query.toLowerCase()
 
         // Search and rank tokens
         const results = tokens
           .filter(
             (token) =>
-              token.name.toLowerCase().includes(searchQuery) ||
-              token.symbol.toLowerCase().includes(searchQuery),
+              token.name.toLowerCase().includes(searchQuery) || token.symbol.toLowerCase().includes(searchQuery),
           )
           .sort((a, b) => {
             // Exact matches first
-            const aExact =
-              a.symbol.toLowerCase() === searchQuery ||
-              a.name.toLowerCase() === searchQuery;
-            const bExact =
-              b.symbol.toLowerCase() === searchQuery ||
-              b.name.toLowerCase() === searchQuery;
-            if (aExact && !bExact) return -1;
-            if (!aExact && bExact) return 1;
-            return 0;
+            const aExact = a.symbol.toLowerCase() === searchQuery || a.name.toLowerCase() === searchQuery
+            const bExact = b.symbol.toLowerCase() === searchQuery || b.name.toLowerCase() === searchQuery
+            if (aExact && !bExact) return -1
+            if (!aExact && bExact) return 1
+            return 0
           })
-          .slice(0, 1);
+          .slice(0, 1)
 
         return {
           success: true,
           data: results,
-        };
+        }
       } catch (error) {
         return {
           success: false,
-          error:
-            error instanceof Error ? error.message : 'Failed to search tokens',
-        };
+          error: error instanceof Error ? error.message : "Failed to search tokens",
+        }
       }
     },
     render: (result: unknown) => {
       const typedResult = result as {
-        success: boolean;
-        data?: JupiterToken[];
-        error?: string;
-      };
+        success: boolean
+        data?: JupiterToken[]
+        error?: string
+      }
 
       if (!typedResult.success) {
         return (
           <div className="relative overflow-hidden rounded-2xl bg-destructive/5 p-4">
             <div className="flex items-center gap-3">
-              <p className="text-sm text-destructive">
-                Error: {typedResult.error}
-              </p>
+              <p className="text-sm text-destructive">Error: {typedResult.error}</p>
             </div>
           </div>
-        );
+        )
       }
 
       if (!typedResult.data?.length) {
@@ -179,7 +159,7 @@ export const jupiterTools = {
               <p className="text-sm text-muted-foreground">No tokens found</p>
             </div>
           </div>
-        );
+        )
       }
 
       return (
@@ -188,46 +168,44 @@ export const jupiterTools = {
             <TokenCard key={token.address} token={token} />
           ))}
         </div>
-      );
+      )
     },
   },
 
   getTokenPrice: {
-    displayName: '💰 Get Token Price',
+    displayName: "💰 Get Token Price",
     isCollapsible: true,
     description:
-      'Get the current price of any Solana token in USDC, including detailed information like buy/sell prices and confidence level.',
+      "Get the current price of any Solana token in USDC, including detailed information like buy/sell prices and confidence level.",
     parameters: z.object({
       tokenAddress: z.string().describe("The token's mint address"),
       showExtraInfo: z
         .boolean()
         .default(true)
-        .describe(
-          'Whether to show additional price information like buy/sell prices and confidence level',
-        ),
+        .describe("Whether to show additional price information like buy/sell prices and confidence level"),
     }),
     execute: async ({
       tokenAddress,
       showExtraInfo,
     }: {
-      tokenAddress: string;
-      showExtraInfo: boolean;
+      tokenAddress: string
+      showExtraInfo: boolean
     }) => {
       try {
-        const token = await searchJupiterTokens(tokenAddress);
+        const token = await searchJupiterTokens(tokenAddress)
         if (!token.length) {
           return {
             success: false,
-            error: 'Token not found',
-          };
+            error: "Token not found",
+          }
         }
 
-        const price = await getJupiterTokenPrice(tokenAddress, showExtraInfo);
+        const price = await getJupiterTokenPrice(tokenAddress, showExtraInfo)
         if (!price) {
           return {
             success: false,
-            error: 'Price data not available',
-          };
+            error: "Price data not available",
+          }
         }
 
         return {
@@ -236,57 +214,46 @@ export const jupiterTools = {
             token: token[0],
             price,
           },
-        };
+        }
       } catch (error) {
         return {
           success: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : 'Failed to get token price',
-        };
+          error: error instanceof Error ? error.message : "Failed to get token price",
+        }
       }
     },
     render: (result: unknown) => {
       const typedResult = result as {
-        success: boolean;
+        success: boolean
         data?: {
-          token: JupiterToken;
-          price: TokenPrice;
-        };
-        error?: string;
-      };
+          token: JupiterToken
+          price: TokenPrice
+        }
+        error?: string
+      }
 
       if (!typedResult.success) {
         return (
           <div className="relative overflow-hidden rounded-2xl bg-destructive/5 p-4">
             <div className="flex items-center gap-3">
-              <p className="text-sm text-destructive">
-                Error: {typedResult.error}
-              </p>
+              <p className="text-sm text-destructive">Error: {typedResult.error}</p>
             </div>
           </div>
-        );
+        )
       }
 
       if (!typedResult.data) {
         return (
           <div className="relative overflow-hidden rounded-2xl bg-muted/50 p-4">
             <div className="flex items-center gap-3">
-              <p className="text-sm text-muted-foreground">
-                No price data available
-              </p>
+              <p className="text-sm text-muted-foreground">No price data available</p>
             </div>
           </div>
-        );
+        )
       }
 
-      return (
-        <PriceCard
-          token={typedResult.data.token}
-          price={typedResult.data.price}
-        />
-      );
+      return <PriceCard token={typedResult.data.token} price={typedResult.data.price} />
     },
   },
-};
+}
+

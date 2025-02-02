@@ -1,39 +1,23 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-
-model SavedPrompt {
-  id              String   @id @default(cuid())
-  userId          String    
-  title           String   @db.VarChar(255)
-  content         String   @db.Text
-  usageFrequency  Int      @default(0)
-  hasEAPAccess    Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  lastUsedAt      DateTime?
-  isFavorite      Boolean  @default(false)
-
-  user            User     @relation(fields: [userId], references: [id])
-
-  @@index([userId, lastUsedAt], name: "idx_userId_lastUsedAt") 
-  @@map("saved_prompts") 
-}
-
 model User {
-  id        String   @id @default(cuid())
-  privyId   String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String     @id @default(cuid())
+  privyId   String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
-  earlyAccess Boolean @default(false)
-  degenMode  Boolean @default(false)
+  hasEAPAccess Boolean @default(false)
+  earlyAccess Boolean  @default(false)
+  degenMode  Boolean   @default(false)
+  referralCode String? @unique
+  referringUserId String?
 
   wallets       Wallet[]
   conversations Conversation[]
@@ -42,6 +26,7 @@ model User {
   tokenStats    TokenStat[]
   TelegramChat  TelegramChat[]
   SavedPrompts SavedPrompt[]
+  subscription  Subscription?
 
   @@map("users")
 }
@@ -190,4 +175,47 @@ model TelegramChat {
   user User @relation(fields: [userId], references: [id])
 
   @@map("telegram_chats")
+}
+
+model Subscription {
+  id             String           @id @default(cuid())
+  userId         String           @unique
+  createdAt      DateTime         @default(now())
+  active         Boolean          @default(true)
+  startDate      DateTime         @default(now())  // When the subscription starts
+  nextPaymentDate DateTime                        // The date for the next payment
+  endDate        DateTime?                        // When the subscription ends (nullable)
+  billingCycle   BillingCycle     @default(MONTHLY) // Enum for billing frequency
+
+  user           User             @relation(fields: [userId], references: [id])
+  payments       SubscriptionPayment[] // One-to-many relation to payments
+
+  @@map("subscriptions")
+}
+
+model SubscriptionPayment {
+  id              String         @id @default(cuid())
+  subscriptionId  String
+  paymentDate     DateTime       // When the payment was processed
+  amount          Decimal        // Payment amount, changed from Float to Decimal
+  status          PaymentStatus  // Status of the payment (e.g., success, failed, pending)
+  failureReason   String?        // Reason for payment failure
+  failureCode     Int?           // Payment failure code
+  createdAt       DateTime       @default(now())
+  transactionHash String?        // Transaction hash for the payment
+
+  subscription    Subscription   @relation(fields: [subscriptionId], references: [id])
+
+  @@map("subscription_payments")
+}
+
+enum BillingCycle {
+  MONTHLY
+  YEARLY
+}
+
+enum PaymentStatus {
+  SUCCESS
+  FAILED
+  PENDING
 }
