@@ -1,16 +1,23 @@
-import type { Metadata } from "next"
-import { sharedMetadata } from "@/components/shared-metadata"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+"use client";
+
+import type { Metadata } from "next";
+import { sharedMetadata } from "@/components/shared-metadata";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = sharedMetadata({
   title: "Privacy Policy",
   description: "Privacy Policy for the BARK AI Agent platform",
   keywords: ["privacy", "data protection", "user rights", "GDPR", "CCPA"],
-})
+});
 
 export default function PrivacyPolicyPage() {
-  const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+
+  // Function to handle printing of the policy
+  const handlePrint = () => {
+    window.print();
+  };
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -102,12 +109,12 @@ export default function PrivacyPolicyPage() {
       </div>
       <div className="mt-8 text-center">
         <Button
-          onClick={() => window.print()}
+          onClick={handlePrint} // Fixed by using a separate function for the onClick event
           className="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-4 focus:ring-primary/50 transition-colors"
         >
           Print Privacy Policy
         </Button>
       </div>
     </div>
-  )
+  );
 }

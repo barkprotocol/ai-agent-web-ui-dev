@@ -1,16 +1,18 @@
-import type { Metadata } from "next"
-import { sharedMetadata } from "@/components/shared-metadata"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+"use client";
+
+import type { Metadata } from "next";
+import { sharedMetadata } from "@/components/shared-metadata";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = sharedMetadata({
   title: "Cookies Policy",
   description: "Cookies Policy for the BARK AI Agent platform",
   keywords: ["cookies", "tracking", "user preferences"],
-})
+});
 
 export default function CookiesPolicyPage() {
-  const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -81,6 +83,5 @@ export default function CookiesPolicyPage() {
         </Button>
       </div>
     </div>
-  )
+  );
 }
-

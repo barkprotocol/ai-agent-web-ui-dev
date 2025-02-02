@@ -3,7 +3,7 @@
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base"
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react"
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
-import { TorusWalletAdapter, LedgerWalletAdapter } from "@solana/wallet-adapter-wallets"
+import { TorusWalletAdapter, LedgerWalletAdapter, PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets"
 import { clusterApiUrl } from "@solana/web3.js"
 import { useMemo, type ReactNode, useEffect } from "react"
 import { ErrorBoundary } from "@/components/error-boundary"
@@ -11,7 +11,7 @@ import { toast } from "@/components/ui/use-toast"
 import { RPC_URL, HELIUS_RPC_URL } from "@/lib/config"
 import { usePrivy } from "@privy-io/react-auth"
 import { PrivyEmbeddedWallet } from "@/lib/privy-embedded-wallet"
-import { debugLog } from "@/lib/utils"
+import { debugLog } from "@/lib/debug"
 
 import "@solana/wallet-adapter-react-ui/styles.css"
 import "@/app/styles/wallet-adapter.css"
@@ -34,7 +34,12 @@ export function WalletContextProvider({
   const { user } = usePrivy()
 
   const wallets = useMemo(() => {
-    const baseWallets = [new TorusWalletAdapter(), new LedgerWalletAdapter()]
+    const baseWallets = [
+      new TorusWalletAdapter(),
+      new LedgerWalletAdapter(),
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+    ]
 
     if (user?.wallet?.address) {
       const privyWallet = new PrivyEmbeddedWallet(user.wallet.address, user.id)
@@ -68,4 +73,3 @@ export function WalletContextProvider({
     </ErrorBoundary>
   )
 }
-

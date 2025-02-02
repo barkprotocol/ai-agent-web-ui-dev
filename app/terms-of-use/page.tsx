@@ -1,15 +1,17 @@
-import type { Metadata } from "next"
-import { sharedMetadata } from "@/components/shared-metadata"
-import Link from "next/link"
+"use client";
+
+import type { Metadata } from "next";
+import { sharedMetadata } from "@/components/shared-metadata";
+import Link from "next/link";
 
 export const metadata: Metadata = sharedMetadata({
   title: "Terms of Use",
   description: "Terms of Use for the BARK AI Agent platform",
   keywords: ["legal", "terms", "conditions"],
-})
+});
 
 export default function TermsOfUsePage() {
-  const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -70,11 +72,11 @@ export default function TermsOfUsePage() {
         <button
           onClick={() => window.print()}
           className="bg-primary text-primary-foreground px-8 py-3 text-lg rounded hover:bg-primary/90 transition-colors"
-          aria-label="Print Terms of Use"
+          aria-label="Print the Terms of Use document"
         >
           Print Terms of Use
         </button>
       </div>
     </div>
-  )
+  );
 }

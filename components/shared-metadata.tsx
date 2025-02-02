@@ -7,6 +7,8 @@ interface SharedMetadataProps {
 }
 
 export function sharedMetadata({ title, description, keywords = [] }: SharedMetadataProps): Metadata {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://barkprotocol.net";
+
   return {
     title: `${title} | BARK AI Agent`,
     description,
@@ -15,7 +17,7 @@ export function sharedMetadata({ title, description, keywords = [] }: SharedMeta
       title,
       description,
       type: "website",
-      url: "https://barkprotocol.net",
+      url: baseUrl,
       siteName: "BARK AI Agent",
     },
     twitter: {
@@ -25,4 +27,3 @@ export function sharedMetadata({ title, description, keywords = [] }: SharedMeta
     },
   }
 }
-
