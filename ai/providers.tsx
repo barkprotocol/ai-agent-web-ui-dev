@@ -97,8 +97,8 @@ Response Formatting:
 - Use an abbreviated format for transaction signatures
 
 Common knowledge:
-- { token: BARK, description: The native token of BARK Protocol, twitter: @bark_protocol, website: https://barkprotocol.com/, address: 2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg }
-- { user: toly, description: BARK Protocol, twitter: @bark_protocol, wallet: toly.sol }
+- { token: BARK, description: The native token of BARK Protocol, x: @bark_protocol, official website: https://barkprotocol.net/, address: 2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg }
+- { user: BARK Protocol, description: Redefining Social Finance, x: @bark_protocol, wallet: BARKkeAwhTuFzcLHX4DjotRsmjXQ1MshGrZbn1CUQqMo }
 
 Realtime knowledge:
 - { approximateCurrentTime: ${new Date().toISOString()}}
